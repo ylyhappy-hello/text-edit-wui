@@ -1,0 +1,57 @@
+===================1===============
+ assignExp(
+  seqVar( simpleVar(a,), simpleVar(b), simpleVar(c),),
+  intExp(4))
+===================1===============
+===================2===============
+ opExp(
+  PLUS,
+  opExp(
+   PLUS,
+   opExp(
+    PLUS,
+    intExp(1),
+    varExp(
+     simpleVar(c))),
+   varExp(
+    simpleVar(b))),
+  opExp(
+   TIMES,
+   varExp(
+    simpleVar(b)),
+   intExp(2)))
+===================2===============
+===================3===============
+ opExp(
+  MINUS,
+  intExp(1),
+  opExp(
+   TIMES,
+   varExp(
+    simpleVar(b)),
+   intExp(2)))
+===================3===============
+===================4===============
+ opExp(
+  PLUS,
+  intExp(1),
+  opExp(
+   TIMES,
+   varExp(
+    simpleVar(b)),
+   intExp(2)))
+===================4===============
+===================5===============
+ opExp(
+  TIMES,
+  opExp(
+   DIVIDE,
+   intExp(1),
+   varExp(
+    simpleVar(b))),
+  intExp(2))
+===================5===============
+===================6===============
+ printExp(
+  simpleVar(b))
+===================6===============

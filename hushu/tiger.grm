@@ -1,0 +1,135 @@
+%{
+#include <stdio.h>
+#include "util.h"
+#include "symbol.h"
+#include "errormsg.h"
+#include "prabsyn.h"
+#include "string.h"
+#include "absyn.h"
+
+int yylex(void); /* function prototype */
+
+A_yly_expList y_absyn_root_list;
+
+static char GLOBAL_PATECHED_STRINGS[1024][1024];
+static int GLOBAL_PATECHED_STRINGS_POINT = 0;
+
+char* setstr(const char* cs){
+  strcpy(GLOBAL_PATECHED_STRINGS[GLOBAL_PATECHED_STRINGS_POINT],cs);
+  return GLOBAL_PATECHED_STRINGS[GLOBAL_PATECHED_STRINGS_POINT++];
+}
+
+void yyerror(char *s)
+{
+ EM_error(EM_tokPos, "%s", s);
+}
+
+char* removeLastChar(char* str) {
+    int len = strlen(str);
+    if(len > 0) {
+        str[len - 1] = '\0';
+    }
+    return str;
+}
+
+%}
+
+
+%union {
+	int pos;
+	int ival;
+	const char* sval;
+  A_yly_exp y_exp;
+  A_yly_expList y_exps;
+  A_yly_var y_var;
+  A_yly_varList y_vars;
+	}
+
+%token <sval> ID STRING
+%token <ival> INT
+
+%left PLUS MINUS
+%left TIMES DIVIDE
+
+%token
+  COMMA COLON SEMICOLON LPAREN RPAREN LBRACK RBRACK 
+  LBRACE RBRACE DOT 
+  PLUS MINUS TIMES DIVIDE EQ NEQ LT LE GT GE
+  AND OR ASSIGN
+  ARRAY IF THEN ELSE WHILE FOR TO DO LET IN END OF 
+  BREAK NIL
+  FUNCTION VAR TYPE 
+  PRINT
+
+%type <y_exp> assignExp opExp stm exp printExp
+%type <y_exps> opExps stms exps
+%type <y_var> varExp opItem  
+%type <y_vars> varExps  
+
+%start program
+
+%%
+program: stms { y_absyn_root_list=$1;}
+
+stms: stm stms {
+  $$=A_yly_ExpList($1, $2);
+}
+stms: stm {
+  $$=A_yly_ExpList($1, NULL);
+}
+stm: exp SEMICOLON { $$=$1;}
+
+exp: opExp { $$=$1; }
+exp: assignExp { $$=$1; }
+exp: printExp { $$=$1; }
+
+opExp: opExp PLUS   opExp  { 
+  $$=A_yly_OpExp(EM_tokPos, A_yly_plusOp, $1, $3);
+}
+opExp: opExp MINUS  opExp  {
+  $$=A_yly_OpExp(EM_tokPos, A_yly_minusOp, $1, $3); 
+} 
+opExp: opExp TIMES opExp  { 
+  $$=A_yly_OpExp(EM_tokPos, A_yly_timesOp, $1, $3); 
+}
+opExp: opExp DIVIDE opExp  { 
+  $$=A_yly_OpExp(EM_tokPos, A_yly_divideOp, $1, $3); 
+} 
+opExp: LBRACK opExp RBRACK {$$=$2;}
+opExp: ID { 
+  $$=A_yly_VarExp(EM_tokPos, 
+  A_yly_SimpleVar(EM_tokPos, S_Symbol(setstr($1)))
+  ); }
+opExp: INT { $$=A_yly_IntExp(EM_tokPos, $1); }
+
+assignExp: varExps ASSIGN INT { 
+  $$=A_yly_AssignExp(EM_tokPos, 
+  A_yly_SeqVar(EM_tokPos, $1),
+  A_yly_IntExp(EM_tokPos, $3)
+  ); 
+}
+varExps: varExp COMMA varExps 
+{
+  $$=A_yly_SimpleVar_List(EM_tokPos, $1, $3);
+}
+varExps: varExp
+{
+  $$=A_yly_SimpleVar_List(EM_tokPos, $1, NULL);
+}
+varExp: ID {
+ $$=A_yly_SimpleVar(EM_tokPos, S_Symbol(setstr($1)));
+}
+
+printExp: PRINT LBRACK ID RBRACK {
+ $$=A_yly_PrintExp(EM_tokPos, 
+   A_yly_VarExp(EM_tokPos, A_yly_SimpleVar(EM_tokPos, S_Symbol(removeLastChar(setstr($3)))))
+ );
+}
+
+printExp: PRINT LBRACK opExp RBRACK {
+ $$=A_yly_PrintExp(EM_tokPos, $3);
+}
+
+
+
+

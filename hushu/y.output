@@ -1,0 +1,541 @@
+非终结语词在文法中无用
+
+    opExps
+    exps
+    opItem
+
+
+终端机在文法中未使用
+
+    STRING
+    COLON
+    LPAREN
+    RPAREN
+    LBRACE
+    RBRACE
+    DOT
+    EQ
+    NEQ
+    LT
+    LE
+    GT
+    GE
+    AND
+    OR
+    ARRAY
+    IF
+    THEN
+    ELSE
+    WHILE
+    FOR
+    TO
+    DO
+    LET
+    IN
+    END
+    OF
+    BREAK
+    NIL
+    FUNCTION
+    VAR
+    TYPE
+
+
+状态 27 冲突：1 项偏移/归约
+
+
+语法
+
+    0 $accept: program $end
+
+    1 program: stms
+
+    2 stms: stm stms
+    3     | stm
+
+    4 stm: exp SEMICOLON
+
+    5 exp: opExp
+    6    | assignExp
+    7    | printExp
+
+    8 opExp: opExp PLUS opExp
+    9      | opExp MINUS opExp
+   10      | opExp TIMES opExp
+   11      | opExp DIVIDE opExp
+   12      | LBRACK opExp RBRACK
+   13      | ID
+   14      | INT
+
+   15 assignExp: varExps ASSIGN INT
+
+   16 varExps: varExp COMMA varExps
+   17        | varExp
+
+   18 varExp: ID
+
+   19 printExp: PRINT LBRACK ID RBRACK
+   20         | PRINT LBRACK opExp RBRACK
+
+
+终结语词，附有它们出现处的规则
+
+    $end (0) 0
+    error (256)
+    ID <sval> (258) 13 18 19
+    STRING <sval> (259)
+    INT <ival> (260) 14 15
+    COMMA (261) 16
+    COLON (262)
+    SEMICOLON (263) 4
+    LPAREN (264)
+    RPAREN (265)
+    LBRACK (266) 12 19 20
+    RBRACK (267) 12 19 20
+    LBRACE (268)
+    RBRACE (269)
+    DOT (270)
+    PLUS (271) 8
+    MINUS (272) 9
+    TIMES (273) 10
+    DIVIDE (274) 11
+    EQ (275)
+    NEQ (276)
+    LT (277)
+    LE (278)
+    GT (279)
+    GE (280)
+    AND (281)
+    OR (282)
+    ASSIGN (283) 15
+    ARRAY (284)
+    IF (285)
+    THEN (286)
+    ELSE (287)
+    WHILE (288)
+    FOR (289)
+    TO (290)
+    DO (291)
+    LET (292)
+    IN (293)
+    END (294)
+    OF (295)
+    BREAK (296)
+    NIL (297)
+    FUNCTION (298)
+    VAR (299)
+    TYPE (300)
+    PRINT (301) 19 20
+
+
+非终结语词，附有它们出现处的规则
+
+    $accept (47)
+        on left: 0
+    program (48)
+        on left: 1
+        on right: 0
+    stms <y_exps> (49)
+        on left: 2 3
+        on right: 1 2
+    stm <y_exp> (50)
+        on left: 4
+        on right: 2 3
+    exp <y_exp> (51)
+        on left: 5 6 7
+        on right: 4
+    opExp <y_exp> (52)
+        on left: 8 9 10 11 12 13 14
+        on right: 5 8 9 10 11 12 20
+    assignExp <y_exp> (53)
+        on left: 15
+        on right: 6
+    varExps <y_vars> (54)
+        on left: 16 17
+        on right: 15 16
+    varExp <y_var> (55)
+        on left: 18
+        on right: 16 17
+    printExp <y_exp> (56)
+        on left: 19 20
+        on right: 7
+
+
+状态 0
+
+    0 $accept: • program $end
+
+    ID      偏移，并进入状态 1
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+    PRINT   偏移，并进入状态 4
+
+    program    转到状态 5
+    stms       转到状态 6
+    stm        转到状态 7
+    exp        转到状态 8
+    opExp      转到状态 9
+    assignExp  转到状态 10
+    varExps    转到状态 11
+    varExp     转到状态 12
+    printExp   转到状态 13
+
+
+状态 1
+
+   13 opExp: ID •
+   18 varExp: ID •
+
+    COMMA     使用规则 18 以归约 (varExp)
+    ASSIGN    使用规则 18 以归约 (varExp)
+    $default  使用规则 13 以归约 (opExp)
+
+
+状态 2
+
+   14 opExp: INT •
+
+    $default  使用规则 14 以归约 (opExp)
+
+
+状态 3
+
+   12 opExp: LBRACK • opExp RBRACK
+
+    ID      偏移，并进入状态 14
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 15
+
+
+状态 4
+
+   19 printExp: PRINT • LBRACK ID RBRACK
+   20         | PRINT • LBRACK opExp RBRACK
+
+    LBRACK  偏移，并进入状态 16
+
+
+状态 5
+
+    0 $accept: program • $end
+
+    $end  偏移，并进入状态 17
+
+
+状态 6
+
+    1 program: stms •
+
+    $default  使用规则 1 以归约 (program)
+
+
+状态 7
+
+    2 stms: stm • stms
+    3     | stm •
+
+    ID      偏移，并进入状态 1
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+    PRINT   偏移，并进入状态 4
+
+    $default  使用规则 3 以归约 (stms)
+
+    stms       转到状态 18
+    stm        转到状态 7
+    exp        转到状态 8
+    opExp      转到状态 9
+    assignExp  转到状态 10
+    varExps    转到状态 11
+    varExp     转到状态 12
+    printExp   转到状态 13
+
+
+状态 8
+
+    4 stm: exp • SEMICOLON
+
+    SEMICOLON  偏移，并进入状态 19
+
+
+状态 9
+
+    5 exp: opExp •
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+
+    PLUS    偏移，并进入状态 20
+    MINUS   偏移，并进入状态 21
+    TIMES   偏移，并进入状态 22
+    DIVIDE  偏移，并进入状态 23
+
+    $default  使用规则 5 以归约 (exp)
+
+
+状态 10
+
+    6 exp: assignExp •
+
+    $default  使用规则 6 以归约 (exp)
+
+
+状态 11
+
+   15 assignExp: varExps • ASSIGN INT
+
+    ASSIGN  偏移，并进入状态 24
+
+
+状态 12
+
+   16 varExps: varExp • COMMA varExps
+   17        | varExp •
+
+    COMMA  偏移，并进入状态 25
+
+    $default  使用规则 17 以归约 (varExps)
+
+
+状态 13
+
+    7 exp: printExp •
+
+    $default  使用规则 7 以归约 (exp)
+
+
+状态 14
+
+   13 opExp: ID •
+
+    $default  使用规则 13 以归约 (opExp)
+
+
+状态 15
+
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+   12      | LBRACK opExp • RBRACK
+
+    RBRACK  偏移，并进入状态 26
+    PLUS    偏移，并进入状态 20
+    MINUS   偏移，并进入状态 21
+    TIMES   偏移，并进入状态 22
+    DIVIDE  偏移，并进入状态 23
+
+
+状态 16
+
+   19 printExp: PRINT LBRACK • ID RBRACK
+   20         | PRINT LBRACK • opExp RBRACK
+
+    ID      偏移，并进入状态 27
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 28
+
+
+状态 17
+
+    0 $accept: program $end •
+
+    $default  接受
+
+
+状态 18
+
+    2 stms: stm stms •
+
+    $default  使用规则 2 以归约 (stms)
+
+
+状态 19
+
+    4 stm: exp SEMICOLON •
+
+    $default  使用规则 4 以归约 (stm)
+
+
+状态 20
+
+    8 opExp: opExp PLUS • opExp
+
+    ID      偏移，并进入状态 14
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 29
+
+
+状态 21
+
+    9 opExp: opExp MINUS • opExp
+
+    ID      偏移，并进入状态 14
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 30
+
+
+状态 22
+
+   10 opExp: opExp TIMES • opExp
+
+    ID      偏移，并进入状态 14
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 31
+
+
+状态 23
+
+   11 opExp: opExp DIVIDE • opExp
+
+    ID      偏移，并进入状态 14
+    INT     偏移，并进入状态 2
+    LBRACK  偏移，并进入状态 3
+
+    opExp  转到状态 32
+
+
+状态 24
+
+   15 assignExp: varExps ASSIGN • INT
+
+    INT  偏移，并进入状态 33
+
+
+状态 25
+
+   16 varExps: varExp COMMA • varExps
+
+    ID  偏移，并进入状态 34
+
+    varExps  转到状态 35
+    varExp   转到状态 12
+
+
+状态 26
+
+   12 opExp: LBRACK opExp RBRACK •
+
+    $default  使用规则 12 以归约 (opExp)
+
+
+状态 27
+
+   13 opExp: ID •
+   19 printExp: PRINT LBRACK ID • RBRACK
+
+    RBRACK  偏移，并进入状态 36
+
+    RBRACK    [使用规则 13 以归约 (opExp)]
+    $default  使用规则 13 以归约 (opExp)
+
+
+状态 28
+
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+   20 printExp: PRINT LBRACK opExp • RBRACK
+
+    RBRACK  偏移，并进入状态 37
+    PLUS    偏移，并进入状态 20
+    MINUS   偏移，并进入状态 21
+    TIMES   偏移，并进入状态 22
+    DIVIDE  偏移，并进入状态 23
+
+
+状态 29
+
+    8 opExp: opExp • PLUS opExp
+    8      | opExp PLUS opExp •
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+
+    TIMES   偏移，并进入状态 22
+    DIVIDE  偏移，并进入状态 23
+
+    $default  使用规则 8 以归约 (opExp)
+
+
+状态 30
+
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+    9      | opExp MINUS opExp •
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+
+    TIMES   偏移，并进入状态 22
+    DIVIDE  偏移，并进入状态 23
+
+    $default  使用规则 9 以归约 (opExp)
+
+
+状态 31
+
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   10      | opExp TIMES opExp •
+   11      | opExp • DIVIDE opExp
+
+    $default  使用规则 10 以归约 (opExp)
+
+
+状态 32
+
+    8 opExp: opExp • PLUS opExp
+    9      | opExp • MINUS opExp
+   10      | opExp • TIMES opExp
+   11      | opExp • DIVIDE opExp
+   11      | opExp DIVIDE opExp •
+
+    $default  使用规则 11 以归约 (opExp)
+
+
+状态 33
+
+   15 assignExp: varExps ASSIGN INT •
+
+    $default  使用规则 15 以归约 (assignExp)
+
+
+状态 34
+
+   18 varExp: ID •
+
+    $default  使用规则 18 以归约 (varExp)
+
+
+状态 35
+
+   16 varExps: varExp COMMA varExps •
+
+    $default  使用规则 16 以归约 (varExps)
+
+
+状态 36
+
+   19 printExp: PRINT LBRACK ID RBRACK •
+
+    $default  使用规则 19 以归约 (printExp)
+
+
+状态 37
+
+   20 printExp: PRINT LBRACK opExp RBRACK •
+
+    $default  使用规则 20 以归约 (printExp)

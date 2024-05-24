@@ -1,0 +1,6 @@
+
+/build
+/.cache/*
+/run_output
+/tmp
+/exp_result
